@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+
+  corelight-softsensor:
+    build:
+      context: ./image-files
+
+    # tag the image name to match the softsensor_version variable
+    image: local/softsensor-bundle
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+      - SYS_NICE
+    container_name: softsensor-bundle
+    env_file:
+      - vars.env
+    volumes:
+      - ./corelight-softsensor.conf:/etc/corelight-softsensor.conf
+      - ./corelight-license.txt:/etc/corelight-license.txt
+      - ./corelight-update-etc:/etc/corelight-update
+      - corelight-update-var:/var/corelight-update
+    hostname: Softsensor-Docker
+    network_mode: "host"
+    restart: unless-stopped
+    privileged: true
+    stdin_open: true
+    tty: true
+
+volumes:
+  corelight-update-var:
